@@ -1,11 +1,15 @@
 <script>
-	export let name;
+  let user = { loggedIn: false };
+
+  function toggle() {
+    user.loggedIn = !user.loggedIn;
+  }
 </script>
 
-<style>
-	h1 {
-		color: purple;
-	}
-</style>
+{#if user.loggedIn}
+  <button on:click={toggle}>Log out</button>
+{/if}
 
-<h1>Hello {name}!</h1>
+{#if !user.loggedIn}
+  <button on:click={toggle}>Log in</button>
+{/if}
