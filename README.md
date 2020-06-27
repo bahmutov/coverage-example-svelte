@@ -1,25 +1,48 @@
 # coverage-example-svelte
 
-**WIP**
+Via [sveltejs/template](https://github.com/sveltejs/template).
 
-Via [sveltejs/template](https://github.com/sveltejs/template)
+## Results
 
-Svelte 3 "User component" example from [https://svelte.dev/examples#if-blocks](https://svelte.dev/examples#if-blocks)
+- `npm install`
+- `npm run e2e`, it will run the app on http://localhost:5000 and open Cypress Test Runner GUI,
+- run `spec.js`,
+- look at results in the `coverage` directory.
 
-WIP: the code coverage seems to NOT map the source correctly for `.svelte` files. For example, the small file [src/App.svelte](src/App.svelte) shows so many statements ...
+Here are the result from a sample run:
 
-![Too many statements](images/svelte-statements.png)
+![Svelte global coverage](images/svelte-global-coverage-results.png)
 
-Even if the `.svelte` file generates lots of code, the back source transformation does not seem to map correctly at all.
+![Svelte component coverage](images/svelte-app-component-coverage-result.png)
 
-![Svelte coverage](images/svelte-coverage.png)
+## Notable changes from the Svelte template
 
-Hmm, the numbers seem to be from the compiled JS code, not the original Svelte template code.
+- Add Cypress, configure code coverage (see [references below](#References) for more details on how),
+- App.svelte is a [Svelte 3 "User component" example](https://svelte.dev/examples#if-blocks),
+- `rollup.config.json` : added `import istanbul from "rollup-plugin-istanbul";`,
+- `rollup.config.json` : changed `sourcemap` to `"inline"`,
+- `rollup.config.json` : added the istanbul plugin config:
 
-Use `npm run e2e` to run the test runner GUI
+```js
+    // only instrument source code in development mode
+    !production &&
+      istanbul({
+        // only instrument our files in "src" folder
+        // which will instrument ".svelte" and ".js" files
+        extensions: [".js", ".svelte"],
+        include: ["src/**/*"],
+        sourceMap: true,
+        compact: false,
+        debug: true
+      }),
+```
 
-Also using fork [bahmutov/rollup-plugin-istanbul](https://github.com/bahmutov/rollup-plugin-istanbul) because the original version was behind times and did not have `dist` published.
+## rollup-istanbul-plugin
 
-See [rollup.config.js](rollup.config.js)
+In order to make code coverage work, you'll need to `npm install --save-dev https://github.com/billowz/rollup-plugin-istanbul#rc`.
+Please ask the original repo to merge the pull request and publish a new version: https://github.com/artberri/rollup-plugin-istanbul/pull/22
 
-Read [Cypress code coverage guide](https://on.cypress.io/code-coverage)
+## References
+
+- See [rollup.config.js](rollup.config.js)
+- Read [Cypress code coverage guide](https://on.cypress.io/code-coverage)
